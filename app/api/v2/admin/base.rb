@@ -15,6 +15,7 @@ module API::V2
       default_format :json
 
       helpers API::V2::Resource::Utils
+      helpers API::V2::Admin::Utils
 
       do_not_route_options!
 

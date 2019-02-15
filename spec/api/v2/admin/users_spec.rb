@@ -19,10 +19,17 @@ describe API::V2::Admin::Users do
     end
 
     context 'admin user' do
-      let(:test_user) { create(:user, role: 'admin') }
-      let(:second_user) { create(:user) }
-      let(:third_user) { create(:user) }
-      let(:fourth_user) { create(:user) }
+      let(:test_user) { create(:user, email: 'testa@gmail.com', role: 'admin') }
+      let(:second_user) { create(:user, email: 'testb@gmail.com') }
+      let(:third_user) { create(:user, email: 'testd@gmail.com') }
+      let(:fourth_user) { create(:user, email: 'testc@gmail.com') }
+
+      let(:params) do {
+        field: 'email',
+        value: 'test'
+      }
+      end
+      let(:do_search_request) { get '/api/v2/admin/users/search', headers: auth_header, params: params }
 
       before(:example) {
         test_user
@@ -39,6 +46,31 @@ describe API::V2::Admin::Users do
         expect(User.second.attributes.except('password_digest')).to eq users.second
         expect(User.third.attributes.except('password_digest')).to eq users.third
         expect(User.last.attributes.except('password_digest')).to eq users.last
+      end
+
+      it 'returns list of users (ASC ordered) in search' do
+        do_search_request
+        users = JSON.parse(response.body)
+
+        expect(users.count).to eq 4
+        expect(users[0]['email']).to eq 'testa@gmail.com'
+        expect(users[1]['email']).to eq 'testb@gmail.com'
+        expect(users[2]['email']).to eq 'testc@gmail.com'
+        expect(users[3]['email']).to eq 'testd@gmail.com'
+      end
+
+      let(:params) do {
+        field: 'smth_wrong',
+        value: 'test'
+      }
+      end
+
+      it 'returns all users (ASC ordered) in search req if field is invalid' do
+        do_search_request
+        users = JSON.parse(response.body)
+        expect(users.count).to eq User.count
+        expect(users.first['email']).to eq 'testa@gmail.com'
+        expect(users.last['email']).to eq 'testd@gmail.com'
       end
 
       context 'pagination test' do

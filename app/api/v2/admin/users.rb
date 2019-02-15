@@ -5,6 +5,19 @@ module API
     module Admin
       # Admin functionality over users table
       class Users < Grape::API
+        helpers do
+          def search(field, value)
+            case field
+            when 'email'
+              User.where("users.#{field} LIKE ?", "#{value}%")
+            when 'first_name', 'last_name'
+              User.joins(:profile).where("profiles.#{field} LIKE ?", "#{value}%")
+            else
+              User.all
+            end.order('email ASC')
+          end
+        end
+
         resource :users do
           desc 'Returns array of users as paginated collection',
           security: [{ "BearerToken": [] }],
@@ -17,6 +30,26 @@ module API
           end
           get do
             User.all.page(params[:page]).per(params[:limit]).collect do |user|
+              user.attributes.except('password_digest')
+            end
+          end
+
+          desc 'Returns array of users as paginated collection',
+          security: [{ "BearerToken": [] }],
+          failure: [
+            { code: 401, message: 'Invalid bearer token' }
+          ]
+          params do
+            requires :field,    type: String, desc: 'User model field.'
+            requires :value,    type: String, desc: 'First part of a value (search target)'
+            optional :page,     type: Integer, default: 1,   integer_gt_zero: true, desc: 'Page number (defaults to 1).'
+            optional :limit,    type: Integer, default: 100, range: 1..1000, desc: 'Number of withdraws per page (defaults to 100, maximum is 1000).'
+          end
+          get '/search' do
+            users = search(params[:field], params[:value])
+            error!({ error: ['admin.user.no_search_matches'] }) if users.empty?
+
+            users.page(params[:page]).per(params[:limit]).collect do |user|
               user.attributes.except('password_digest')
             end
           end
