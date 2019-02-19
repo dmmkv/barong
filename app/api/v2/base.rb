@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'v2/validations'
+require_dependency 'v2/exception_handlers'
 
 module API::V2
   # Base api configuration for V2 module
@@ -10,6 +11,8 @@ module API::V2
     format         :json
     content_type   :json, 'application/json'
     default_format :json
+
+    include ExceptionHandlers
 
     mount Admin::Base      => '/admin'
     mount Identity::Base   => '/identity'
