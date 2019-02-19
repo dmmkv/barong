@@ -22,6 +22,10 @@ module API
             error!({ errors: ['jwt.decode_and_verify'] }, 401)
           end
 
+          rescue_from(JWT::DecodeError) do |error|
+            error!({ errors: ['jwt.decode_and_verify'] }, 403)
+          end
+
           # Known Vault Error from TOTPService.with_human_error
           rescue_from(TOTPService::Error) do |error|
             error!({ errors: ['totp.error'] }, 422)

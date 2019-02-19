@@ -24,12 +24,25 @@ module API::V2
           { code: 422, message: 'Validation errors' }
         ]
         params do
-          requires :email, type: String, desc: 'User Email', allow_blank: false
-          requires :password, type: String, desc: 'User Password', allow_blank: false
-          optional :refid, type: String, desc: 'Referral uid'
-          optional :lang, type: String, desc: 'Client env language'
-          optional :captcha_response, types: [String, Hash],
-                                      desc: 'Response from captcha widget'
+          requires :email,
+                   type: String,
+                   message: 'identity.user.missing_email',
+                   allow_blank: { value: false, message: 'identity.user.empty_email' },
+                   desc: 'User Email'
+          requires :password,
+                   type: String,
+                   message: 'identity.user.missing_password',
+                   allow_blank: { value: false, message: 'identity.user.empty_password' },
+                   desc: 'User Password'
+          optional :refid,
+                   type: String,
+                   desc: 'Referral uid'
+          optional :lang,
+                   type: String,
+                   desc: 'Client env language'
+          optional :captcha_response,
+                   types: [String, Hash],
+                   desc: 'Response from captcha widget'
         end
         post do
           declared_params = declared(params, include_missing: false)
@@ -61,11 +74,14 @@ module API::V2
             { code: 422, message: 'Validation errors' }
           ]
           params do
-            requires :email, type: String,
-                        desc: 'Account email',
-                        allow_blank: false
-            optional :lang, type: String,
-                        desc: 'Client env language'
+            requires :email,
+                     type: String,
+                     message: 'identity.user.missing_email',
+                     allow_blank: { value: false, message: 'identity.user.empty_email' },
+                     desc: 'Account email'
+            optional :lang,
+                     type: String,
+                     desc: 'Client env language'
           end
           post '/generate_code' do
             current_user = User.find_by_email(params[:email])
@@ -84,9 +100,11 @@ module API::V2
             { code: 422, message: 'Validation errors' }
           ]
           params do
-            requires :token, type: String,
-                                     desc: 'Token from email',
-                                     allow_blank: false
+            requires :token,
+                     type: String,
+                     message: 'identity.user.missing_token',
+                     allow_blank: { value: false, message: 'identity.user.empty_token' },
+                     desc: 'Token from email'
           end
           post '/confirm_code' do
             payload = codec.decode_and_verify(
@@ -117,11 +135,14 @@ module API::V2
             { code: 404, message: 'User doesn\'t exist'}
           ]
           params do
-            requires :email, type: String,
-                             desc: 'Account email',
-                             allow_blank: false
-            optional :lang, type: String,
-                            desc: 'Client env language'
+            requires :email,
+                     type: String,
+                     message: 'identity.user.missing_email',
+                     allow_blank: { value: false, message: 'identity.user.empty_email' },
+                     desc: 'Account email'
+            optional :lang,
+                     type: String,
+                     desc: 'Client env language'
           end
 
           post '/generate_code' do
@@ -148,15 +169,21 @@ module API::V2
             { code: 422, message: 'Validation errors' }
           ]
           params do
-            requires :reset_password_token, type: String,
-                                            desc: 'Token from email',
-                                            allow_blank: false
-            requires :password, type: String,
-                                desc: 'User password',
-                                allow_blank: false
-            requires :confirm_password, type: String,
-                                        desc: 'User password',
-                                        allow_blank: false
+            requires :reset_password_token,
+                     type: String,
+                     message: 'identity.user.missing_pass_token',
+                     allow_blank: { value: false, message: 'identity.user.empty_pass_token' },
+                     desc: 'Token from email'
+            requires :password,
+                     type: String,
+                     message: 'identity.user.missing_password',
+                     allow_blank: { value: false, message: 'identity.user.empty_password' },
+                     desc: 'User password'
+            requires :confirm_password,
+                     type: String,
+                     message: 'identity.user.missing_confirm_password',
+                     allow_blank: { value: false, message: 'identity.user.empty_confirm_password' },
+                     desc: 'User password'
           end
           post '/confirm_code' do
             unless params[:password] == params[:confirm_password]

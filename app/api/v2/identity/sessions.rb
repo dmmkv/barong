@@ -15,12 +15,16 @@ module API::V2
             { code: 404, message: 'Record is not found' }
         ]
         params do
-          requires :email
-          requires :password
-          optional :captcha_response, types: [String, Hash],
-                                      desc: 'Response from captcha widget'
-          optional :otp_code, type: String,
-                              desc: 'Code from Google Authenticator'
+          requires :email,
+                   message: 'identity.session.missing_email'
+          requires :password,
+                   message: 'identity.session.missing_password'
+          optional :captcha_response,
+                   types: [String, Hash],
+                   desc: 'Response from captcha widget'
+          optional :otp_code,
+                   type: String,
+                   desc: 'Code from Google Authenticator'
         end
         post do
           declared_params = declared(params, include_missing: false)
