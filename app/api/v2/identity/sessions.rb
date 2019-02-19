@@ -20,7 +20,7 @@ module API::V2
           requires :password,
                    message: 'identity.session.missing_password'
           optional :captcha_response,
-                   types: [String, Hash],
+                   types: { value: [String, Hash], message: 'identity.session.invalid_captcha_format' },
                    desc: 'Response from captcha widget'
           optional :otp_code,
                    type: String,

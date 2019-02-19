@@ -19,9 +19,10 @@ module API::V2
 
         desc 'Returns user activity'
         params do
-          requires :topic, type: String,
-                              allow_blank: false,
-                              desc: 'Topic of user activity. Allowed: [all, password, session, otp]'
+          requires :topic,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Topic of user activity. Allowed: [all, password, session, otp]'
         end
         get '/activity/:topic' do
           data = current_user.activities
@@ -39,15 +40,18 @@ module API::V2
           { code: 422, message: 'Validation errors' }
         ]
         params do
-          requires :old_password, type: String,
-                                          desc: 'Previous account password',
-                                          allow_blank: false
-          requires :new_password, type: String,
-                              desc: 'User password',
-                              allow_blank: false
-          requires :confirm_password, type: String,
-                              desc: 'User password',
-                              allow_blank: false
+          requires :old_password,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Previous account password'
+          requires :new_password,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'User password'
+          requires :confirm_password,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'User password'
         end
         put '/password' do
           unless params[:new_password] == params[:confirm_password]

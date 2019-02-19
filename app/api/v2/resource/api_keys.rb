@@ -24,12 +24,20 @@ module API::V2
                { code: 422, message: 'Validation errors' }
              ]
         params do
-          requires :algorithm, type: String, allow_blank: false
-          optional :kid, type: String, allow_blank: false
-          optional :scope, type: String,
-                           allow_blank: false,
-                           desc: 'comma separated scopes'
-          requires :totp_code, type: String, desc: 'Code from Google Authenticator', allow_blank: false
+          requires :algorithm,
+                   type: String,
+                   allow_blank: false
+          optional :kid,
+                   type: String,
+                   allow_blank: false
+          optional :scope,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'comma separated scopes'
+          requires :totp_code,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Code from Google Authenticator'
         end
         post do
           declared_params = declared(unified_params, include_missing: false)
@@ -53,13 +61,21 @@ module API::V2
           { code: 422, message: 'Validation errors' }
         ]
         params do
-          requires :kid, type: String, allow_blank: false
-          optional :scope, type: String,
-                           allow_blank: false,
-                           desc: 'comma separated scopes'
-          optional :state, type: String, desc: 'State of API Key. "active" state means key is active and can be used for auth',
-                           allow_blank: false
-          requires :totp_code, type: String, desc: 'Code from Google Authenticator', allow_blank: false
+          requires :kid,
+                   type: String,
+                   allow_blank: false
+          optional :scope,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'comma separated scopes'
+          optional :state,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'State of API Key. "active" state means key is active and can be used for auth'
+          requires :totp_code,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Code from Google Authenticator'
         end
         patch ':kid' do
           declared_params = declared(params, include_missing: false)
@@ -84,8 +100,13 @@ module API::V2
                 { code: 404, message: 'Record is not found' }
               ]
         params do
-          requires :kid, type: String, allow_blank: false
-          requires :totp_code, type: String, desc: 'Code from Google Authenticator', allow_blank: false
+          requires :kid,
+                   type: String,
+                   allow_blank: false
+          requires :totp_code,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Code from Google Authenticator'
         end
         delete ':kid' do
           api_key = current_user.api_keys.find_by!(kid: params[:kid])

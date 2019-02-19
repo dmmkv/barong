@@ -23,7 +23,10 @@ module API
                  { code: 404, message: 'Record is not found' }
                ]
           params do
-            requires :key, type: String, allow_blank: false, desc: 'Label key.'
+            requires :key,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label key.'
           end
           route_param :key do
             get do
@@ -40,8 +43,14 @@ module API
                  { code: 422, message: 'Validation errors' }
                ]
           params do
-            requires :key, type: String, allow_blank: false, desc: 'Label key.'
-            requires :value, type: String, allow_blank: false, desc: 'Label value.'
+            requires :key,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label key.'
+            requires :value,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label value.'
           end
           post do
             label =
@@ -67,8 +76,14 @@ module API
                  { code: 422, message: 'Validation errors' }
                ]
           params do
-            requires :key, type: String, allow_blank: false, desc: 'Label key.'
-            requires :value, type: String, allow_blank: false, desc: 'Label value.'
+            requires :key,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label key.'
+            requires :value,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label value.'
           end
           patch ':key' do
             label = current_user.labels.find_by!(key: params[:key])
@@ -87,7 +102,10 @@ module API
                  { code: 404, message: 'Record is not found' }
                ]
           params do
-            requires :key, type: String, allow_blank: false, desc: 'Label key.'
+            requires :key,
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Label key.'
           end
           delete ':key' do
             label = current_user.labels.find_by!(key: params[:key])

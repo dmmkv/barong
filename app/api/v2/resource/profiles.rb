@@ -33,7 +33,9 @@ module API::V2
           requires :postcode, type: String
           requires :city, type: String
           requires :country, type: String
-          optional :metadata, type: Hash, desc: 'Any key:value pairs'
+          optional :metadata,
+                   type: Hash,
+                   desc: 'Any key:value pairs'
         end
 
         post do

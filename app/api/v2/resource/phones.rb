@@ -31,9 +31,10 @@ module API::V2
                { code: 422, message: 'Validation errors' }
              ]
         params do
-          requires :phone_number, type: String,
-                                  desc: 'Phone number with country code',
-                                  allow_blank: false
+          requires :phone_number,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Phone number with country code'
         end
         post do
           declared_params = declared(params)
@@ -58,9 +59,10 @@ module API::V2
                { code: 422, message: 'Validation errors' }
              ]
         params do
-          requires :phone_number, type: String,
-                                  desc: 'Phone number with country code',
-                                  allow_blank: false
+          requires :phone_number,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Phone number with country code'
         end
         post '/send_code' do
           declared_params = declared(params)
@@ -83,12 +85,14 @@ module API::V2
                { code: 404, message: 'Record is not found' }
              ]
         params do
-          requires :phone_number, type: String,
-                                  desc: 'Phone number with country code',
-                                  allow_blank: false
-          requires :verification_code, type: String,
-                                       desc: 'Verification code from sms',
-                                       allow_blank: false
+          requires :phone_number,
+                   type: String,
+                   desc: 'Phone number with country code',
+                   allow_blank: false
+          requires :verification_code,
+                   type: String,
+                   allow_blank: false,
+                   desc: 'Verification code from sms'
         end
         post '/verify' do
           declared_params = declared(params)
